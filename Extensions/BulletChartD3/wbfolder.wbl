@@ -1,4 +1,4 @@
-bulletchart-properties.js;
-com-itelligence-bulletchart.js;
-com-itelligence-bulletchart.qext;
-jquery.sparkline.min.js;
+bulletchart-properties-d3.js;
+com-itelligence-bulletchart-d3.js;
+com-itelligence-bulletchart-d3.qext;
+d3.js;

@@ -1,0 +1,16 @@
+
+Run CMD as Administrator
+
+and create hard symlinks to the folder that contains your extension folder:
+
+Code:
+mklink /J SourceFolder SymlinkFolder
+
+Exmaple:
+mklink /J C:\Users\seebach\Documents\Qlik\QlikView\Extensions\BulletChartD3 C:\Users\seebach\Documents\GitHub\QlikView\Extensions\BulletChartD3
+
+Result:
+Junction created for C:\Users\seebach\Documents\Qlik\QlikView\Extensions\BulletC
+hartD3 <<===>> C:\Users\seebach\Documents\GitHub\QlikView\Extensions\BulletChart
+D3
+

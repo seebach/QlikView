@@ -1,9 +1,0 @@
-{
-	"name" : "Bullet Chart",
-	"description" : "Bullet Chart based on Jquery Sparklines",
-	"icon" : "bar-chart-vertical",
-	"type" : "visualization",
-	"version": "1.0",
-	"preview" : "bar",
-	"author": "Torben Seebach itelligence Nordic"
-}
