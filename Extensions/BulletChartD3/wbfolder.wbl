@@ -1,4 +1,6 @@
+styles.css;
 bulletchart-properties-d3.js;
 com-itelligence-bulletchart-d3.js;
 com-itelligence-bulletchart-d3.qext;
-d3.js;
+d3.v3.js;
+bullet.js;
