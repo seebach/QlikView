@@ -1,5 +1,5 @@
 /**
- * @owner Erik Wetterberg (ewg) (thanks, mods by Torben Seebach)
+ * @owner Erik Wetterberg (ewg)
  */
 
 define( [], function () {
@@ -10,21 +10,20 @@ define( [], function () {
 		items: {
 			dimensions: {
 				uses: "dimensions",
-				min: 0,
+				min: 1,
 				max: 1
 			},
 			measures: {
 				uses: "measures",
 				min: 1,
-				max: 5
+				max: 1
 			},
-
 			sorting: {
 				uses: "sorting"
 			},
 			settings: {
 				uses: "settings",
-//				colorPicker: 
+//				colorpicker:,
 				items: {
 					fonts: {
 						type: "items",
