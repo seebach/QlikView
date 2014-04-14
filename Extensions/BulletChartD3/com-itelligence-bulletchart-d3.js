@@ -6,7 +6,7 @@ requirejs.config({
 		}
 	}
 });
-define(["jquery", "./com-itelligence-bulletchart-d3-properties", "./itelligence-bulletchart-d3-bullet-lib","text!./styles.css"], function($, properties) {
+define(["jquery", "text!./styles.css","./com-itelligence-bulletchart-d3-properties", "./itelligence-bulletchart-d3-bullet-lib"], function($, properties) {
 	'use strict';
 	$("<style>").html(properties).appendTo("head");
 	return {
@@ -36,7 +36,7 @@ define(["jquery", "./com-itelligence-bulletchart-d3-properties", "./itelligence-
 				console.log('start paint 2');
 		//	d3.select($element[0]).append("p").text("New paragraph!");
 
-/*
+
 //			d3.select($element[0]).append("p").text("loading");
 			//check that we have data to render
 			if(layout.qHyperCube.qDataPages[0].qMatrix.length>=1 ) { 
@@ -44,7 +44,7 @@ define(["jquery", "./com-itelligence-bulletchart-d3-properties", "./itelligence-
 			$element.html("");
 			var count = 0;
 			var salt = Math.round( Math.random() *10000);
-			var datastring = '[';
+			var datastring = []; //'[\n';
 			var qData = layout.qHyperCube.qDataPages[0];
 			console.log(layout.qHyperCube);
 
@@ -64,36 +64,34 @@ define(["jquery", "./com-itelligence-bulletchart-d3-properties", "./itelligence-
 					}						
 				//	});	
 				});
-*/				/*
-				If (typeof valueArray[2] == 'undefined') {
+				
+				if (typeof valueArray[2] === 'undefined') {
 				// get the highest value to create background chart area 
 				valueArray[2] = ((valueArray[0]>valueArray[1]) ? valueArray[0] : valueArray[1]);
-				}*/
-				// check if we need to add a , to seperate data arrays
-/*				if (count > 0) {
-					datastring += ',';
 				}
-				datastring += '{"title":"'+label+'",';
-				datastring += '"measures":['+valueArray[0]+'],';
-				datastring += '"markers":['+valueArray[1]+'],';
-				datastring += '"ranges":['+valueArray[2]+']}';
+				// check if we need to add a , to seperate data arrays
+				// create data array
+				var dataPairs = { "title":label,"ranges":[],"measures":[],"markers":[] }; //,"measures":{valueArray[0]},"markers":{valueArray[1]} };
+				// insert values into array
+				dataPairs["ranges"][0] = valueArray[2];
+				dataPairs["measures"][0] = valueArray[0];
+				dataPairs["markers"][0] = valueArray[1];
+				
+				datastring.push(dataPairs);
 					
 				console.log('datastring'); 					
 				console.log(datastring); 					
 				// build output
 
-				// reset array to ensure data refrash
-				valueArray = undefined;
-				console.log(valueArray);
 				count = count+1;	
 			});
 		
-		datastring += ']';
-*/
+//		datastring += ']';
 
+}
 		// required markers (,"markers":[2100]),ranges (,"ranges":[1400,2500])
 		// optional subtitle ("subtitle":"US$, in thousands")
-		var data=[
+/*		var data2=[
 				  {"title":"Revenue","subtitle":"US$, in thousands","ranges":[150,225,300],"measures":[220,270],"markers":[250]},
 				  {"title":"Profit","subtitle":"%","ranges":[20,25,30],"measures":[21,23],"markers":[26]},
 				  {"title":"Order Size","subtitle":"US$, average","ranges":[350,500,600],"measures":[100,320],"markers":[550]},
@@ -101,8 +99,9 @@ define(["jquery", "./com-itelligence-bulletchart-d3-properties", "./itelligence-
 				  {"title":"New Customers","measures":[1000],"ranges":[2500],"markers":[2100]},
 		//		  {"title":"Satisfaction","subtitle":"out of 5","ranges":[3.5,4.25,5],"measures":[3.2,4.7],"markers":[4.4]}
 				]
-			;
+			; */
 
+		var data = datastring;
 	    console.log(data);
 
 		var margin = {top: 5, right: 40, bottom: 20, left: 120},
@@ -153,7 +152,8 @@ define(["jquery", "./com-itelligence-bulletchart-d3-properties", "./itelligence-
 				    return Math.max(0, d + k * (Math.random() - .5));
 				  };
 			};	 
-		 	
+		 
+
 		},
 		clearSelectedValues : function($element) {
 			//jQuery can not change class of SVG element, need d3 for that
