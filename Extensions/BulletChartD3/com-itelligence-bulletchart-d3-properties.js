@@ -10,20 +10,19 @@ define( [], function () {
 		items: {
 			dimensions: {
 				uses: "dimensions",
-				min: 1,
+				min: 0,
 				max: 1
 			},
 			measures: {
 				uses: "measures",
 				min: 1,
-				max: 1
+				max: 5
 			},
 			sorting: {
 				uses: "sorting"
 			},
 			settings: {
 				uses: "settings",
-//				colorpicker:,
 				items: {
 					fonts: {
 						type: "items",

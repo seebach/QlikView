@@ -1,41 +1,39 @@
-
-
-//define(["jquery", "./bulletchart-properties-d3","./d3","./bullet-d3" ], function($, properties) {
- requirejs.config({
+/*globals define, console*/
+requirejs.config({
 	shim : {
-		"extensions/com-itelligence-bulletchart-d3/bullet-d3" : {
-			"deps" : ["extensions/com-itelligence-bulletchart-d3/d3.min"]
+		"extensions/com-itelligence-bulletchart-d3/itelligence-bulletchart-d3-bullet-lib" : {
+			"deps" : ["extensions/com-itelligence-bulletchart-d3/d3"]
 		}
 	}
-}); 
- 
-define(["jquery","text!./styles.css", "./bullet-d3","./bulletchart-properties-d3"], function($, properties) { 
-	'use strict';$("<style>").html(properties).appendTo("head");
+});
+define(["jquery", "./com-itelligence-bulletchart-d3-properties", "./itelligence-bulletchart-d3-bullet-lib","text!./styles.css"], function($, properties) {
+	'use strict';
+	$("<style>").html(properties).appendTo("head");
 	return {
-		type : "BulletChart",
+		type : "BullectChart",
 		//Refer to the properties file
 		definition : properties,
-		initialProperties : { 
+
+		initialProperties : {
 			version: 1.0,
 			qHyperCubeDef : {
 				qDimensions : [],
 				qMeasures : [],
 				qInitialDataFetch : [{
-					qWidth : 4,
+					qWidth : 5,
 					qHeight : 50
 				}]
 			},
 			fontSize : {
 				min : 8,
 				max : 24
-			
+			}
 		},
 		snapshot : {
 			canTakeSnapshot : true
-		}, 
 		},
-		paint: function ($element,layout) { 
-			console.log('start paint 2');
+		paint : function($element, layout) { 
+				console.log('start paint 2');
 		//	d3.select($element[0]).append("p").text("New paragraph!");
 
 /*
@@ -66,13 +64,13 @@ define(["jquery","text!./styles.css", "./bullet-d3","./bulletchart-properties-d3
 					}						
 				//	});	
 				});
---*/				/*
+*/				/*
 				If (typeof valueArray[2] == 'undefined') {
 				// get the highest value to create background chart area 
 				valueArray[2] = ((valueArray[0]>valueArray[1]) ? valueArray[0] : valueArray[1]);
 				}*/
 				// check if we need to add a , to seperate data arrays
-/*--				if (count > 0) {
+/*				if (count > 0) {
 					datastring += ',';
 				}
 				datastring += '{"title":"'+label+'",';
@@ -91,10 +89,8 @@ define(["jquery","text!./styles.css", "./bullet-d3","./bulletchart-properties-d3
 			});
 		
 		datastring += ']';
---*/
-/*		$element.select('#d3-bulletchart').html('loading..');
-		$element.select('#d3-bulletchart').html('<div>loading..1</div>');
-*/		
+*/
+
 		// required markers (,"markers":[2100]),ranges (,"ranges":[1400,2500])
 		// optional subtitle ("subtitle":"US$, in thousands")
 		var data=[
@@ -120,13 +116,6 @@ define(["jquery","text!./styles.css", "./bullet-d3","./bulletchart-properties-d3
 
 		var w = $element.width(), h = $element.height();
 
-//		var svg = d3.select('#d3-bulletchart').bullet(); 
-//		d3.select($element[0]) ;
-		//.append("svg").attr("viewBox", "0 0 " + w + " " + h).attr("width", w).attr("height", h).append("g").attr("transform", "translate(" + w / 2 + "," + h / 2 + ")").selectAll("text").data(data).enter().append("text").style("font-size"), function(error, data)  {
-
-//		d3.json("bullets.json", function(error, data) {
-		// build bullet chart:
-
 		var svg = d3.select($element[0]).selectAll("svg")
 		      .data(data)
 		    .enter().append("svg")
@@ -150,23 +139,25 @@ define(["jquery","text!./styles.css", "./bullet-d3","./bulletchart-properties-d3
 		      .attr("dy", "1em")
 		      .text(function(d) { return d.subtitle; });
 
-		 
-		//}
-
-			function randomize(d) {
+		
+		function randomize(d) {
 			  if (!d.randomizer) d.randomizer = randomizer(d);
 			  d.markers = d.markers.map(d.randomizer);
 			  d.measures = d.measures.map(d.randomizer);
 			  return d;
 			};
 
-			function randomizer(d) {
+		function randomizer(d) {
 				  var k = d3.max(d.ranges) * .2;
 				  return function(d) {
 				    return Math.max(0, d + k * (Math.random() - .5));
 				  };
 			};	 
-		 }	
-	}	
+		 	
+		},
+		clearSelectedValues : function($element) {
+			//jQuery can not change class of SVG element, need d3 for that
+			d3.select($element[0]).selectAll(".selected").classed("selected", false);
+		}
+	};
 });
-
