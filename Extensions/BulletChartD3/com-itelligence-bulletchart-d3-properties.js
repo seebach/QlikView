@@ -16,7 +16,28 @@ define( [], function () {
 			measures: {
 				uses: "measures",
 				min: 1,
-				max: 5
+				max: 5,
+				items: {
+					customProp: {
+						ref: "customProp",
+						label: "Show as",
+						component: "dropdown",
+						options: [ {
+								        value: "m",
+								        label: "measure line"
+								    }, {
+								        value: "t",
+								        label: "target line"
+								    } ,
+ 									{
+								        value: "b",
+								        label: "background"
+								    } ],
+//						options: {"measure line","target line","background"},
+						type: "string",
+						defaultValue: "m"
+					}
+				}
 			},
 			sorting: {
 				uses: "sorting"

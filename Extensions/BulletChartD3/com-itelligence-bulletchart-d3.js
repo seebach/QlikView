@@ -5,10 +5,9 @@ requirejs.config({
 			"deps" : ["extensions/com-itelligence-bulletchart-d3/d3"]
 		}
 	}
-});
-define(["jquery", "text!./styles.css","./com-itelligence-bulletchart-d3-properties", "./itelligence-bulletchart-d3-bullet-lib"], function($, properties) {
-	'use strict';
-	$("<style>").html(properties).appendTo("head");
+});// 
+define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-properties", "./itelligence-bulletchart-d3-bullet-lib"], function($, properties) {
+	'use strict';$("<style>").html(properties).appendTo("head");
 	return {
 		type : "BullectChart",
 		//Refer to the properties file
@@ -33,15 +32,16 @@ define(["jquery", "text!./styles.css","./com-itelligence-bulletchart-d3-properti
 			canTakeSnapshot : true
 		},
 		paint : function($element, layout) { 
-				console.log('start paint 2');
+				console.log('start paint 3');
 		//	d3.select($element[0]).append("p").text("New paragraph!");
 
 
 //			d3.select($element[0]).append("p").text("loading");
 			//check that we have data to render
 			if(layout.qHyperCube.qDataPages[0].qMatrix.length>=1 ) { 
+			var dimensions = layout.qHyperCube.qDataPages[0].qMatrix.length;	
 			// || layout.qHyperCube.qDataPages[0].qMatrix.length) {	
-			$element.html("");
+			$element.html("loading..");
 			var count = 0;
 			var salt = Math.round( Math.random() *10000);
 			var datastring = []; //'[\n';
@@ -107,7 +107,7 @@ define(["jquery", "text!./styles.css","./com-itelligence-bulletchart-d3-properti
 		var margin = {top: 5, right: 40, bottom: 20, left: 120},
 		    width = $element.width() - margin.left - margin.right,
 		    // todo: divide by total number of elements in dimensions
-		    height = ($element.height()/5) - margin.top - margin.bottom;
+		    height = ($element.height()/dimensions) - margin.top - margin.bottom;
 
 		var chart = d3.bullet()
 		    .width(width)
@@ -123,7 +123,9 @@ define(["jquery", "text!./styles.css","./com-itelligence-bulletchart-d3-properti
 		      .attr("height", height + margin.top + margin.bottom)
 		    .append("g")
 		      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+		     // .transition()
 		      .call(chart);
+
 
 		var title = svg.append("g")
 		      .style("text-anchor", "end")
