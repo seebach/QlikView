@@ -1,0 +1,8 @@
+{
+	"name" : "Word Cloud v2",
+	"description" : "World Cloud extension example",
+	"icon" : "text-image",
+	"type" : "visualization",
+	"version": "1.0",
+	"author": "QlikTech International extended by Torben Seebach itelligence"
+}
