@@ -1,4 +1,15 @@
 /*globals define, console*/
+/*
+	ToDo:
+		labels in dimension below texst
+		multiple dimensions height, or single dim
+		use 
+		minsize display handling (scrollbar?)
+		handle when legend is shown
+		colorpicker
+		change display type base on custom setting
+		set max barsize
+*/
 requirejs.config({
 	shim : {
 		"extensions/com-itelligence-bulletchart-d3/itelligence-bulletchart-d3-bullet-lib" : {
