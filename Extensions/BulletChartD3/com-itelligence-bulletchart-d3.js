@@ -17,8 +17,10 @@ requirejs.config({
 		}
 	}
 });// 
-define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-properties", "./itelligence-bulletchart-d3-bullet-lib"], function($, properties) {
-	'use strict';$("<style>").html(properties).appendTo("head");
+define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-properties", "./itelligence-bulletchart-d3-bullet-lib"], function($, cssProperties,properties) {
+	'use strict';$("<style>").html(cssProperties).appendTo("head");
+	var runCount = 1;
+
 	return {
 		type : "BullectChart",
 		//Refer to the properties file
@@ -43,7 +45,10 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 			canTakeSnapshot : true
 		},
 		paint : function($element, layout) { 
-				console.log('start paint 3');
+			runCount = runCount+1;
+			log('start paint 3');
+			log(layout);
+		
 		//	d3.select($element[0]).append("p").text("New paragraph!");
 
 
@@ -52,24 +57,28 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 			if(layout.qHyperCube.qDataPages[0].qMatrix.length>=1 ) { 
 			var dimensions = layout.qHyperCube.qDataPages[0].qMatrix.length;	
 			// || layout.qHyperCube.qDataPages[0].qMatrix.length) {	
-			$element.html("loading..");
+			$element.html("");
 			var count = 0;
 			var salt = Math.round( Math.random() *10000);
 			var datastring = []; //'[\n';
 			var qData = layout.qHyperCube.qDataPages[0];
-			console.log(layout.qHyperCube);
+
 
 			$.each(qData.qMatrix, function(key, row) { 
 				var valueArray = [];
 				var label = '';
+				
 				// log loop into rows
 				$.each(row, function(index, cell) {
 				//	$.each(this, function(key2, cell) { 
 					if(isNaN(row[0].qNum)) {
-						label = row[0].qText;
-					} else {
-						label = 'no dim';
+						label = disclosureLabelText( row[0].qText, $element.width());
+					} 	
+					if(row[0].qIsOtherCell===true) {
+						// other label needs tp be set dynamically
+						label = disclosureLabelText(  layout.qHyperCube.qDimensionInfo[0].othersLabel, $element.width());
 					}
+
 					if(!isNaN(cell.qNum)) {
 						valueArray.push(cell.qNum);
 					}						
@@ -90,11 +99,9 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 				
 				datastring.push(dataPairs);
 					
-				console.log('datastring'); 					
-				console.log(datastring); 					
-				// build output
-
 				count = count+1;	
+				
+
 			});
 		
 //		datastring += ']';
@@ -113,12 +120,28 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 			; */
 
 		var data = datastring;
-	    console.log(data);
+//	    log(data);
+
+
+	    var divHeight = $element.height();
+	    var divWidth = $element.width();
+	    var divMarginLabel = disclosureLabelWidth(divWidth);
+	    var divMarginRight = disclosureRightMargin(divWidth);
+	    var divMarginText = ''; 
+	    var elementHeight = (divHeight/dimensions)*0.95;
+	    var elementRelativeMargin = 25;
+	    var elementRelativeHeight = 25;
+	    var marginTop = (elementHeight*0.1) ;
+	    var marginBottom = disclosureLegendHeight(elementHeight*0.3);
+	    // log('h:'+divHeight+' w:'+divWidth +' eh:'+elementHeight);
+
+	    var titleFontSize = disclosureFontSize(elementHeight);
 
 		var margin = {top: 5, right: 40, bottom: 20, left: 120},
-		    width = $element.width() - margin.left - margin.right,
+		    width = $element.width() - divMarginLabel - divMarginRight,
 		    // todo: divide by total number of elements in dimensions
-		    height = ($element.height()/dimensions) - margin.top - margin.bottom;
+		    height = elementHeight - marginTop - marginBottom;
+		//log('mt:'+marginTop +' mb:'+ marginBottom+' h:'+height);
 
 		var chart = d3.bullet()
 		    .width(width)
@@ -130,10 +153,12 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 		      .data(data)
 		    .enter().append("svg")
 		      .attr("class", "bullet")
-		      .attr("width", width + margin.left + margin.right)
-		      .attr("height", height + margin.top + margin.bottom)
+		      .attr("width", width + divMarginLabel + divMarginRight)
+		      .attr("height", height + marginTop + marginBottom)
+//		      .attr("width", width + divMarginLabel + divMarginRight)
+//		      .attr("height", height + marginTop + marginBottom)
 		    .append("g")
-		      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+		      .attr("transform", "translate(" + divMarginLabel + "," + marginTop + ")")
 		     // .transition()
 		      .call(chart);
 
@@ -144,6 +169,9 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 
 		title.append("text")
 		      .attr("class", "title")
+		      //.fontSize('8px')
+		      //.style("font-size", function(d) {	return d.size + "px";
+		      .style("font-size", titleFontSize )
 		      .text(function(d) { return d.title; });
 
 		title.append("text")
@@ -151,7 +179,84 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 		      .attr("dy", "1em")
 		      .text(function(d) { return d.subtitle; });
 
-		
+		log('Runs: '+runCount);
+
+		// adjust title 
+		function disclosureFontSize (elementHeight) {
+			var size = "14px";
+			if (elementHeight>=23 & elementHeight<=30) {
+				size = Math.round(elementHeight)-17+"px";
+			} 
+			if (elementHeight<22) {
+					size = "8px";
+			}
+			log(size+' '+elementHeight);
+			return size;
+		} 
+	
+
+		function disclosureLabelText(dimLabel,divWidth) {
+			var label = '';
+			var letterLength = 8;
+/*			if( noDimension()===true){
+				return label;
+			} */
+//			log(divWidth);
+//			log('ll '+dimLabel.length*letterLength);
+			if(divWidth>=400 ) {
+				label = dimLabel;
+			} else if( dimLabel.length*letterLength<=400) {
+				// log(((dimLabel.length*5)-divWidth)/5);
+				if (dimLabel.length*letterLength >= disclosureLabelWidth(divWidth) ) {
+					// determine how many letters to cut, add 3 to total because of dots..
+					var letters = 3+Math.floor(((dimLabel.length*letterLength)-disclosureLabelWidth(divWidth))/letterLength);
+//					log('letters '+letters);
+					label =  dimLabel.slice( 0,dimLabel.length-letters )+'...';
+				} else {
+					label = dimLabel;
+				}
+			} else if(divWidth<=100) {
+				// no label;
+			}
+
+			return label;
+		}
+
+		function disclosureLabelWidth(divWidth) {
+			var width = 0;
+/*			if( noDimension()===true){
+				return width;
+			} */
+			//log(divWidth);
+			// show label if there is space enough
+			if(divWidth>=200 && divWidth<=400) {
+				width = divWidth*0.3;
+			} else if (divWidth>=400){	
+				width = 140;
+			}
+			log('w:'+width);
+			return width;
+		}
+
+		function disclosureRightMargin(divWidth) {
+			var width = 0;
+			// show label if there is space enough
+			if (divWidth>=400){	
+				width = 20;
+			}
+			log('w:'+width);
+			return width;
+		}
+		function disclosureLegendHeight(divHeight) {
+			var height = 5;
+//			log(divHeight);
+			// show lengend if there is space enough
+			if(divHeight>=20) {
+				height = divHeight;
+			}
+			return height;
+		}
+
 		function randomize(d) {
 			  if (!d.randomizer) d.randomizer = randomizer(d);
 			  d.markers = d.markers.map(d.randomizer);
@@ -165,12 +270,30 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 				    return Math.max(0, d + k * (Math.random() - .5));
 				  };
 			};	 
-		 
-
+		 // i use this logging function so its easy to turn logging on or off
+		 function log(obj) {
+				  console.log(obj);
+//				  dump(obj);
+			};
+//
+function dump(object) {
+        if (window.JSON && window.JSON.stringify)
+            console.log(JSON.stringify(object));
+        else
+            console.log(object);
+    };
+//
 		},
 		clearSelectedValues : function($element) {
 			//jQuery can not change class of SVG element, need d3 for that
 			d3.select($element[0]).selectAll(".selected").classed("selected", false);
-		}
+		},
+/*		noDimension : function ($element,layout) {
+				if(layout.qHyperCube.qDimensionInfo[0].length>=1) {
+					return true;
+				}
+				return false;
+		};
+*/
 	};
 });

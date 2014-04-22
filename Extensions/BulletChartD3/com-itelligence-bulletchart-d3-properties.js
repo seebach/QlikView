@@ -1,5 +1,7 @@
 /**
- * @owner Erik Wetterberg (ewg)
+ * @creator Erik Wetterberg (ewg)
+ * @modifier @owner Torben Seebach itelligence
+ * @contributer Patrik Lundblad
  */
 
 define( [], function () {
@@ -18,6 +20,13 @@ define( [], function () {
 				min: 1,
 				max: 5,
 				items: {
+					myColor: {
+                             ref: "color.singleColor",
+                             translation: "properties.color",
+                             type: "string",
+                             component: "color-picker",
+                             defaultValue: 3
+					},
 					customProp: {
 						ref: "customProp",
 						label: "Show as",
