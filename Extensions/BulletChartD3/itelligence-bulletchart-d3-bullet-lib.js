@@ -6,7 +6,7 @@
 d3.bullet = function() {
   var orient = "left", // TODO top & bottom
       reverse = false,
-      duration = 0,
+      duration = 1000,
       ranges = bulletRanges,
       markers = bulletMarkers,
       measures = bulletMeasures,
@@ -86,7 +86,8 @@ d3.bullet = function() {
           .data(markerz);
 
       marker.enter().append("line")
-          .attr("class", "marker")
+//          .attr("class", "marker")
+          .attr("class", function(d, i) { return "marker s" + i; })
           .attr("x1", x0)
           .attr("x2", x0)
           .attr("y1", height / 6)

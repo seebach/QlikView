@@ -18,17 +18,18 @@ define( [], function () {
 			measures: {
 				uses: "measures",
 				min: 1,
-				max: 5,
+				max: 10,
 				items: {
 					myColor: {
-                             ref: "color.singleColor",
+//                             ref: "color.singleColor",
+                             ref: "qDef.color",
                              translation: "properties.color",
                              type: "string",
                              component: "color-picker",
                              defaultValue: 3
 					},
 					customProp: {
-						ref: "customProp",
+						ref: "qDef.viz",
 						label: "Show as",
 						component: "dropdown",
 						options: [ {

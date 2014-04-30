@@ -29,7 +29,7 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 				qDimensions : [],
 				qMeasures : [],
 				qInitialDataFetch : [{
-					qWidth : 5,
+					qWidth : 10,
 					qHeight : 50
 				}]
 			},
@@ -45,9 +45,23 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 			runCount = runCount+1;
 			log('start paint 3');
 			log(layout);
-		
-		//	d3.select($element[0]).append("p").text("New paragraph!");
-
+			
+			// color palette from Patrik Lundblad
+			var palette = [
+                         '#b0afae',
+                         '#7b7a78',
+                         '#545352',
+                         '#4477aa',
+                         '#7db8da',
+                         '#b6d7ea',
+                         '#46c646',
+                         '#f93f17',
+                         '#ffcf02',
+                         '#276e27',
+                         '#ffffff',
+                         '#000000'
+			            ];
+ 
 
 //			d3.select($element[0]).append("p").text("loading");
 			//check that we have data to render
@@ -55,28 +69,47 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 			var dimensions = layout.qHyperCube.qDataPages[0].qMatrix.length;	
 			// || layout.qHyperCube.qDataPages[0].qMatrix.length) {	
 			$element.html("");
+			
 			var count = 0;
 			var salt = Math.round( Math.random() *10000);
 			var datastring = []; //'[\n';
 			var qData = layout.qHyperCube.qDataPages[0];
+			var qMeasures = layout.qHyperCube.qMeasureInfo;
+			// log(qMeasures);
+			// do we have dimensions?
+			var dimFlag = layout.qHyperCube.qDimensionInfo.length;
+			 
+			var vizArray = [];
+			var colorArray = [];
 
+			$.each(qMeasures, function(key, row) {
+				//get type of viz
+				vizArray.push(qMeasures[key].viz);
+				// get color for viz
+				colorArray.push(qMeasures[key].color);
+			});
 
 			$.each(qData.qMatrix, function(key, row) { 
 				var valueArray = [];
+
 				var label = '';
 				
+
 				// log loop into rows
 				$.each(row, function(index, cell) {
-				//	$.each(this, function(key2, cell) { 
-					if(isNaN(row[0].qNum)) {
-						label = disclosureLabelText( row[0].qText, $element.width());
+				// log(index);
+					
+					if(isNaN(row[0].qNum) && dimFlag>0) {
+						label = disclosureLabelText( row[0].qText, $element.width(),dimFlag);
 					} 	
-					if(row[0].qIsOtherCell===true) {
+					if(row[0].qIsOtherCell===true && dimFlag>0) {
 						// other label needs tp be set dynamically
-						label = disclosureLabelText(  layout.qHyperCube.qDimensionInfo[0].othersLabel, $element.width());
+						label = disclosureLabelText(  layout.qHyperCube.qDimensionInfo[0].othersLabel, $element.width(),dimFlag);
 					}
-
+				//	if((cell.qState==='S')) {
+				//	}	
 					if(!isNaN(cell.qNum)) {
+
 						valueArray.push(cell.qNum);
 					}						
 				//	});	
@@ -89,16 +122,26 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 				// check if we need to add a , to seperate data arrays
 				// create data array
 				var dataPairs = { "title":label,"ranges":[],"measures":[],"markers":[] }; //,"measures":{valueArray[0]},"markers":{valueArray[1]} };
+
+
 				// insert values into array
-				dataPairs["ranges"][0] = valueArray[2];
-				dataPairs["measures"][0] = valueArray[0];
-				dataPairs["markers"][0] = valueArray[1];
-				
+				var valueLength = valueArray.length;
+				for (var i = 0; i < valueLength; i++) {
+				    if(vizArray[i]==='m') {
+						dataPairs["measures"].push(valueArray[i])
+				    }
+				    if(vizArray[i]==='t') {
+						dataPairs["markers"].push(valueArray[i])
+				    }
+				    if(vizArray[i]==='b') {
+						dataPairs["ranges"].push(valueArray[i])
+				    }
+				}
+				//log(dataPairs);
 				datastring.push(dataPairs);
 					
 				count = count+1;	
 				
-
 			});
 		
 //		datastring += ']';
@@ -117,12 +160,12 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 			; */
 
 		var data = datastring;
-//	    log(data);
+	    log(data);
 
 
 	    var divHeight = $element.height();
 	    var divWidth = $element.width();
-	    var divMarginLabel = disclosureLabelWidth(divWidth);
+	    var divMarginLabel = disclosureLabelWidth(divWidth,dimFlag);
 	    var divMarginRight = disclosureRightMargin(divWidth);
 	    var divMarginText = ''; 
 	    var elementHeight = (divHeight/dimensions)*0.95;
@@ -171,13 +214,44 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 		      .style("font-size", titleFontSize )
 		      .text(function(d) { return d.title; });
 
-		title.append("text")
+/*		title.append("text")
 		      .attr("class", "subtitle")
 		      .attr("dy", "1em")
 		      .text(function(d) { return d.subtitle; });
-
+*/
 		log('Runs: '+runCount);
 
+
+		// set colors
+//		$("rect.range.s0").css("fill","red");
+//		$("rect.measure.s0").css("fill","red");
+//		$(".marker").css("stroke","red");
+		var range = 0;
+		var marker = 0;
+		var measure = 0;
+		var colorShow = '';
+
+		var vizLength = vizArray.length;
+		for (var i = 0; i < vizLength; i++) {
+		    var colorShow = palette[colorArray[i]];
+			
+		    if(vizArray[i]==='m') {
+				$("rect.measure.s"+measure).css("fill",colorShow);
+				measure++;
+			//    log(i + ' m '+ vizArray[i] + ' - '+colorShow);
+		    }
+		    if(vizArray[i]==='t') {
+				$("line.marker.s"+marker).css("stroke",colorShow);
+				marker++;
+			   log(i + ' t '+ vizArray[i] + ' - '+colorShow);
+		    }
+		    if(vizArray[i]==='b') {
+				$("rect.range.s"+range).css("fill",colorShow);
+				range++;
+			//    log(i + ' b '+ vizArray[i] + ' - '+colorShow);
+		    }
+		}
+	// disclosure functions 	
 		// adjust title 
 		function disclosureFontSize (elementHeight) {
 			var size = "14px";
@@ -187,12 +261,12 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 			if (elementHeight<22) {
 					size = "8px";
 			}
-			log(size+' '+elementHeight);
+			//log(size+' '+elementHeight);
 			return size;
 		} 
 	
 
-		function disclosureLabelText(dimLabel,divWidth) {
+		function disclosureLabelText(dimLabel,divWidth,dimFlag) {
 			var label = '';
 			var letterLength = 8;
 /*			if( noDimension()===true){
@@ -204,7 +278,7 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 				label = dimLabel;
 			} else if( dimLabel.length*letterLength<=400) {
 				// log(((dimLabel.length*5)-divWidth)/5);
-				if (dimLabel.length*letterLength >= disclosureLabelWidth(divWidth) ) {
+				if (dimLabel.length*letterLength >= disclosureLabelWidth(divWidth,dimFlag) ) {
 					// determine how many letters to cut, add 3 to total because of dots..
 					var letters = 3+Math.floor(((dimLabel.length*letterLength)-disclosureLabelWidth(divWidth))/letterLength);
 //					log('letters '+letters);
@@ -219,8 +293,11 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 			return label;
 		}
 
-		function disclosureLabelWidth(divWidth) {
+		function disclosureLabelWidth(divWidth,dimFlag) {
 			var width = 0;
+			if( dimFlag===0 ) {
+				return width;
+			}
 /*			if( noDimension()===true){
 				return width;
 			} */
@@ -231,7 +308,7 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 			} else if (divWidth>=400){	
 				width = 140;
 			}
-			log('w:'+width);
+			//log('w:'+width);
 			return width;
 		}
 
@@ -241,7 +318,7 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 			if (divWidth>=400){	
 				width = 20;
 			}
-			log('w:'+width);
+			//log('w:'+width);
 			return width;
 		}
 		function disclosureLegendHeight(divHeight) {
