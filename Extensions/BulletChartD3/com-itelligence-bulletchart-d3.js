@@ -1,12 +1,9 @@
 /*globals define, console*/
 /*
 	ToDo:
-		labels in dimension below texst
-		multiple dimensions height, or single dim
-		use 
+		labels in dimension centered
 		minsize display handling (scrollbar?)
-		handle when legend is shown
-		colorpicker
+		Show multiple diemensions
 		change display type base on custom setting
 		set max barsize
 */
