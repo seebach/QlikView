@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" >
+<html>
+<head>
+<title>Xul.fr - Demonstration of Tabs with Frames</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="tabs.css" />
+<style>
+
+body
+{ 
+/*    margin: 48px; */
+    font-size:100%;
+    font-family: arial, sans;
+    background: #FFF url('logo.gif') no-repeat fixed top right; 
+    background-size: 210px 33px;
+    margin :0px;
+
+    padding:0px;
+    padding-right: 2px;
+}
+
+.legal
+{
+    text-align:center;
+    font-size: 80%;
+    color: #666;
+}
+
+.darken
+{
+  backround-color:#EEE;
+}
+
+</style>
+
+<script type="text/javascript">
+
+//load for QlikView 11 type
+function loaditQV( element)
+{
+
+  var tabs=document.getElementById('tabs').getElementsByTagName("a");
+  for (var i=0; i < tabs.length; i++)
+  {
+    if(tabs[i].href == element.href) 
+      tabs[i].className="selectedQV";
+    else
+      tabs[i].className="regular";
+  }
+}
+// load for Qlik Sense 
+function loaditQS( element)
+{
+
+  var tabs=document.getElementById('tabs').getElementsByTagName("a");
+  for (var i=0; i < tabs.length; i++)
+  {
+    if(tabs[i].href == element.href) 
+      tabs[i].className="selectedQS";
+    else
+      tabs[i].className="regular";
+  }
+}
+
+</script>
+
+
+</head>
+
+
+<body>
+<div id="content">
+<div id="tabs">
+<ul>
+<!-- 
+  Change the href to match your servers, and <a> text for tabs names, add more lines <li> to have multiple servers, 
+  use loaditQS() for sense style tabs, and loaditQV() for QlikView style.
+-->
+     <li><a href="http://aarswnxt01.2cchange.local/hub/my/work" class="selectedQS" target="mainFrame"  onclick="loaditQS(this)" >Qlik Sense Hub</a></li>
+     <li><a href="http://bllswqli01.2cchange.local/qlikview" class="regular" target="mainFrame"  onclick="loaditQV(this)" >QlikView AccessPoint</a></li>
+</ul>
+</div>
+
+
+<p><br>
+  <br>
+</p>
+</div>
+</body>
+</html>
