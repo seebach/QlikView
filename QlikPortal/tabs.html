@@ -75,9 +75,14 @@ function loaditQS( element)
 <!-- 
   Change the href to match your servers, and <a> text for tabs names, add more lines <li> to have multiple servers, 
   use loaditQS() for sense style tabs, and loaditQV() for QlikView style.
+##### TEMPLATES #####
+Qlik Sense Server:
+     <li><a href="http://##SENSE_SERVER_ADDRESS##/hub/my/work" class="selectedQS" target="mainFrame"  onclick="loaditQS(this)" >Qlik Sense Hub</a></li>
+QlikVIew Server
+     <li><a href="http://##QLIKVIEW_SERVER_ADDRESS##/qlikview" class="regular" target="mainFrame"  onclick="loaditQV(this)" >QlikView AccessPoint</a></li
 -->
-     <li><a href="http://aarswnxt01.2cchange.local/hub/my/work" class="selectedQS" target="mainFrame"  onclick="loaditQS(this)" >Qlik Sense Hub</a></li>
-     <li><a href="http://bllswqli01.2cchange.local/qlikview" class="regular" target="mainFrame"  onclick="loaditQV(this)" >QlikView AccessPoint</a></li>
+     <li><a href="http://##SENSE_SERVER_ADDRESS##/hub/my/work" class="selectedQS" target="mainFrame"  onclick="loaditQS(this)" >Qlik Sense Hub</a></li>
+     <li><a href="http://##QLIKVIEW_SERVER_ADDRESS##/qlikview" class="regular" target="mainFrame"  onclick="loaditQV(this)" >QlikView AccessPoint</a></li>
 </ul>
 </div>
 
