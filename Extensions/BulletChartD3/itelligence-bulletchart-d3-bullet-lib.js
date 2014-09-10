@@ -12,7 +12,8 @@ d3.bullet = function() {
       measures = bulletMeasures,
       width = 380,
       height = 30,
-      tickFormat = null;
+      tickFormat = null
+      ;
 
   // For each small multiple…
   function bullet(g) {
@@ -26,7 +27,7 @@ d3.bullet = function() {
       var x1 = d3.scale.linear()
           .domain([0, Math.max(rangez[0], markerz[0], measurez[0])])
           .range(reverse ? [width, 0] : [0, width]);
-
+//log( d );
       // Retrieve the old x-scale, if this is an update.
       var x0 = this.__chart__ || d3.scale.linear()
           .domain([0, Infinity])

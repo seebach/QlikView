@@ -6,6 +6,8 @@
 		Show multiple diemensions
 		change display type base on custom setting
 		set max barsize
+
+		Branch into single object version
 */
 requirejs.config({
 	shim : {
@@ -81,6 +83,7 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 			 
 			var vizArray = [];
 			var colorArray = [];
+			var scale  =-1;
 
 			$.each(qMeasures, function(key, row) {
 				//get type of viz
@@ -115,6 +118,9 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 				//	});	
 				});
 				
+
+				scale = Math.max(scale,valueArray[0],valueArray[1],valueArray[2])
+
 				if (typeof valueArray[2] === 'undefined') {
 				// get the highest value to create background chart area 
 				valueArray[2] = ((valueArray[0]>valueArray[1]) ? valueArray[0] : valueArray[1]);
@@ -143,7 +149,7 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 				count = count+1;	
 				
 			});
-		
+		log (scale);
 //		datastring += ']';
 
 }
@@ -196,7 +202,7 @@ define(["jquery","text!./styles.css","./com-itelligence-bulletchart-d3-propertie
 		      .attr("width", width + divMarginLabel + divMarginRight)
 		      .attr("height", height + marginTop + marginBottom)
 //		      .attr("width", width + divMarginLabel + divMarginRight)
-//		      .attr("height", height + marginTop + marginBottom)
+//		      .attr("height", height + marginTop + marginBottom)			
 		    .append("g")
 		      .attr("transform", "translate(" + divMarginLabel + "," + marginTop + ")")
 		     // .transition()
